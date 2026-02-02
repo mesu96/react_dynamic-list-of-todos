@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames';
 import { Todo } from '../../types/Todo';
 
 type Props = {
@@ -29,31 +30,34 @@ export const TodoList: React.FC<Props> = ({
     <tbody>
       {todos.map(todo => {
         const isSelected = todo.id === selectedTodoId;
-        const titleClass = todo.completed
-          ? 'has-text-success'
-          : 'has-text-danger';
-        const eyeIcon = isSelected ? 'far fa-eye-slash' : 'far fa-eye';
 
         return (
           <tr
             key={todo.id}
             data-cy="todo"
-            className={isSelected ? 'has-background-info-light' : ''}
+            className={classNames({
+              'has-background-info-light': isSelected,
+            })}
           >
             <td className="is-vcentered">{todo.id}</td>
 
-            {todo.completed ? (
-              <td className="is-vcentered">
+            <td className="is-vcentered">
+              {todo.completed && (
                 <span className="icon" data-cy="iconCompleted">
                   <i className="fas fa-check" />
                 </span>
-              </td>
-            ) : (
-              <td className="is-vcentered" />
-            )}
+              )}
+            </td>
 
             <td className="is-vcentered is-expanded">
-              <p className={titleClass}>{todo.title}</p>
+              <p
+                className={classNames({
+                  'has-text-success': todo.completed,
+                  'has-text-danger': !todo.completed,
+                })}
+              >
+                {todo.title}
+              </p>
             </td>
 
             <td className="has-text-right is-vcentered">
@@ -64,7 +68,12 @@ export const TodoList: React.FC<Props> = ({
                 onClick={() => onSelectTodo(todo.id)}
               >
                 <span className="icon">
-                  <i className={eyeIcon} />
+                  <i
+                    className={classNames('far', {
+                      'fa-eye': !isSelected,
+                      'fa-eye-slash': isSelected,
+                    })}
+                  />
                 </span>
               </button>
             </td>
